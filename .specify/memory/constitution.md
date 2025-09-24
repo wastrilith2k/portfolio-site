@@ -1,50 +1,71 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report - Constitution v1.0.0
+========================================
+Version change: Template → 1.0.0 (initial ratification)
+Modified principles: None (initial creation)
+Added sections: All core sections established
+Removed sections: None
+Templates requiring updates:
+  ✅ .specify/templates/plan-template.md (references constitution v2.1.1, now v1.0.0)
+  ✅ .specify/templates/spec-template.md (compatible)
+  ✅ .specify/templates/tasks-template.md (compatible)
+Follow-up TODOs: None
+-->
+
+# Portfolio Site Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Specification-First Development
+Every feature MUST begin with a complete specification that defines user scenarios,
+functional requirements, and acceptance criteria before any implementation.
+No code development may begin without an approved specification that clearly
+articulates what will be built and why it provides user value.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Test-Driven Development (NON-NEGOTIABLE)
+Tests MUST be written before implementation code. All tests MUST fail initially,
+then implementation code is written to make tests pass. The Red-Green-Refactor
+cycle is strictly enforced. No feature is considered complete without
+comprehensive test coverage including unit, integration, and contract tests.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. User-Centered Design
+All features MUST directly serve user needs with clear value propositions.
+Technical complexity is only justified when it directly supports user requirements.
+Features MUST be designed from the user's perspective first, then technical
+implementation follows to support those user goals.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Iterative Planning & Execution
+Development MUST follow the systematic workflow: Specify → Plan → Tasks → Implement.
+Each phase produces concrete artifacts (spec.md, plan.md, tasks.md) that guide
+the next phase. Implementation happens in small, testable increments with
+continuous validation against specifications.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Portfolio Excellence
+As a portfolio project, code quality MUST demonstrate professional best practices.
+This includes clean code architecture, comprehensive documentation, responsive
+design, accessibility compliance, and performance optimization. Every aspect
+reflects technical competency and attention to detail.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Development Standards
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+All code MUST follow modern web development best practices including responsive
+design principles, semantic HTML, accessible interfaces (WCAG compliance),
+cross-browser compatibility, and optimized performance metrics. Security
+considerations MUST be integrated throughout development, not added as an afterthought.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Quality Assurance
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+Code review is REQUIRED for all changes. Automated testing MUST pass before
+any merge. Performance benchmarks MUST be maintained. Documentation MUST be
+updated with all changes. The project MUST always be in a deployable state
+demonstrating portfolio-quality standards.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices. Amendments require
+documented justification and version updates following semantic versioning.
+All development decisions MUST align with these principles. Complexity deviations
+MUST be explicitly justified in planning documents with rationale for why
+simpler alternatives are insufficient.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-09-23 | **Last Amended**: 2025-09-23
