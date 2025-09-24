@@ -1,32 +1,34 @@
 import { useState } from 'react'
-import { usePortfolioAnalytics, useSectionTracking } from '../../hooks/useAnalytics'
+import { usePortfolioAnalytics } from '../../hooks/useAnalytics'
 
-export default function ChatSection() {
+interface Message {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: string
+}
+
+export default function FloatingChatbot() {
+  const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
-  const [messages, setMessages] = useState<Array<{
-    id: string;
-    role: 'user' | 'assistant';
-    content: string;
-    timestamp: string;
-  }>>([
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      role: 'assistant' as const,
+      role: 'assistant',
       content: "Hi! I'm an AI assistant that can answer questions about James's experience, projects, and skills. What would you like to know?",
       timestamp: new Date().toISOString()
     }
   ])
 
   const { trackChatMessage } = usePortfolioAnalytics()
-  const trackSection = useSectionTracking('chat')
 
   const handleSendMessage = async () => {
     if (!message.trim()) return
 
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now().toString(),
-      role: 'user' as const,
+      role: 'user',
       content: message.trim(),
       timestamp: new Date().toISOString()
     }
@@ -36,7 +38,7 @@ export default function ChatSection() {
     setMessage('')
     setIsTyping(true)
 
-    // Call Anthropic AI API via Netlify Function
+    // Call Gemini AI API via Netlify Function
     try {
       const response = await fetch('/.netlify/functions/chat', {
         method: 'POST',
@@ -54,9 +56,9 @@ export default function ChatSection() {
       }
 
       const data = await response.json()
-      const botResponse = {
+      const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        role: 'assistant' as const,
+        role: 'assistant',
         content: data.response,
         timestamp: new Date().toISOString()
       }
@@ -66,9 +68,9 @@ export default function ChatSection() {
       setIsTyping(false)
     } catch (error) {
       console.error('AI response error:', error)
-      const errorResponse = {
+      const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        role: 'assistant' as const,
+        role: 'assistant',
         content: "I'm sorry, I'm having trouble connecting right now. Please try again later or contact James directly at james@01webdevelopment.com.",
         timestamp: new Date().toISOString()
       }
@@ -85,33 +87,57 @@ export default function ChatSection() {
   }
 
   return (
-    <section ref={trackSection} className="py-20 bg-gray-900 text-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Chat with AI Assistant</h2>
-          <p className="text-xl text-gray-300">
-            Ask questions about my experience, projects, or skills!
-          </p>
-        </div>
+    <div className="fixed bottom-4 right-4 z-50">
+      {/* Chat Toggle Button */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+          aria-label="Open AI Assistant"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
+      )}
 
-        <div className="bg-gray-800 rounded-xl overflow-hidden">
-          {/* Chat Messages */}
-          <div className="h-96 overflow-y-auto p-6 space-y-4">
+      {/* Chat Window */}
+      {isOpen && (
+        <div className="bg-white rounded-lg shadow-2xl w-80 h-96 border border-gray-200 flex flex-col">
+          {/* Header */}
+          <div className="bg-green-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+            <div>
+              <h3 className="font-semibold">AI Assistant</h3>
+              <p className="text-xs text-green-100">Ask about James's experience</p>
+            </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-white hover:bg-green-700 rounded p-1"
+              aria-label="Close chat"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
                     msg.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-700 text-gray-100'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-800'
                   }`}
                 >
-                  <p className="text-sm leading-relaxed">{msg.content}</p>
+                  <p className="leading-relaxed">{msg.content}</p>
                   <span className="text-xs opacity-70 mt-1 block">
-                    {new Date(msg.timestamp).toLocaleTimeString()}
+                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
               </div>
@@ -119,7 +145,7 @@ export default function ChatSection() {
 
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg">
+                <div className="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
@@ -130,33 +156,29 @@ export default function ChatSection() {
             )}
           </div>
 
-          {/* Chat Input */}
-          <div className="border-t border-gray-700 p-4">
-            <div className="flex space-x-4">
+          {/* Input */}
+          <div className="border-t border-gray-200 p-3">
+            <div className="flex space-x-2">
               <input
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask about my experience, projects, or skills..."
-                className="flex-1 bg-gray-700 text-white rounded-lg px-4 py-2 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                placeholder="Ask about James..."
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-500"
                 disabled={isTyping}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || isTyping}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
               >
                 Send
               </button>
             </div>
           </div>
         </div>
-
-        <div className="mt-6 text-center text-sm text-gray-400">
-          <p>💡 This is a demo interface. The full version will use Google Gemini AI for intelligent responses.</p>
-        </div>
-      </div>
-    </section>
+      )}
+    </div>
   )
 }

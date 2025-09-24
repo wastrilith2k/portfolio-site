@@ -11,15 +11,15 @@ export default function ProfileSection() {
   }
 
   return (
-    <section ref={trackSection} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+    <section ref={trackSection} className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="mb-8">
-          <div className="w-32 h-32 bg-white/20 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold">
+        <div className="mb-6">
+          <div className="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">
             {profileData.name.split(' ').map(n => n[0]).join('')}
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">{profileData.name}</h1>
-          <h2 className="text-xl md:text-2xl text-blue-100 mb-6">{profileData.title}</h2>
-          <p className="text-lg text-blue-50 max-w-2xl mx-auto leading-relaxed">
+          <h1 className="text-3xl md:text-4xl font-bold mb-3">{profileData.name}</h1>
+          <h2 className="text-lg md:text-xl text-green-100 mb-4">{profileData.title}</h2>
+          <p className="text-base text-green-50 max-w-2xl mx-auto leading-relaxed">
             {profileData.summary}
           </p>
         </div>
@@ -44,7 +44,7 @@ export default function ProfileSection() {
           </a>
           <a
             href={`mailto:${profileData.email}`}
-            className="bg-white text-blue-600 hover:bg-blue-50 transition-colors px-6 py-3 rounded-lg font-medium"
+            className="bg-white text-green-600 hover:bg-green-50 transition-colors px-6 py-3 rounded-lg font-medium"
           >
             Contact Me
           </a>
