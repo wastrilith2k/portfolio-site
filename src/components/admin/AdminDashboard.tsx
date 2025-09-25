@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { portfolioService, ProfileData, Project, Skill } from '../../services/portfolioService'
+import DataMigration from './DataMigration'
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth()
@@ -227,6 +228,9 @@ export default function AdminDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Data Migration */}
+        <DataMigration />
+
         {/* Navigation Tabs */}
         <div className="border-b border-gray-200 mb-8">
           <nav className="-mb-px flex space-x-8">

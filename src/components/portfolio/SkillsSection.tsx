@@ -40,27 +40,27 @@ export default function SkillsSection() {
   }
 
   return (
-    <section ref={trackSection} className="py-20 bg-white">
+    <section ref={trackSection} className="py-12 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Skills & Technologies</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Skills & Technologies</h2>
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">
             Technologies and tools I work with, organized by category and proficiency level.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Object.entries(skillsByCategory).map(([category, skills]) => (
-            <div key={category} className="bg-gray-50 rounded-xl p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">{category}</h3>
-              <div className="space-y-3">
+            <div key={category} className="bg-gray-50 rounded-xl p-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{category}</h3>
+              <div className="space-y-2">
                 {skills.map((skill) => (
                   <div
                     key={skill.name}
                     className="flex items-center justify-between cursor-pointer group"
                     onClick={() => handleSkillClick(skill)}
                   >
-                    <span className="text-gray-700 group-hover:text-gray-900 font-medium">
+                    <span className="text-gray-700 group-hover:text-gray-900 font-medium text-sm">
                       {skill.name}
                     </span>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getLevelColor(skill.level)}`}>
@@ -73,7 +73,7 @@ export default function SkillsSection() {
           ))}
         </div>
 
-        <div className="mt-16 text-center">
+        <div className="mt-8 text-center">
           <div className="inline-flex items-center space-x-6 bg-blue-50 rounded-lg px-6 py-4">
             <div className="text-sm text-blue-600">
               <span className="font-medium">Legend:</span>

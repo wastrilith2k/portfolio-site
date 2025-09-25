@@ -40,35 +40,35 @@ export default function ProjectsSection() {
   }
 
   return (
-    <section ref={trackSection} className="py-20 bg-gray-50">
+    <section ref={trackSection} className="py-12 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Featured Projects</h2>
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">
             Here are some of the projects I've worked on, showcasing different technologies and approaches.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
             <div
               key={project.id}
               className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow cursor-pointer"
               onClick={() => handleProjectClick(project)}
             >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}>
                     {project.status}
                   </span>
                 </div>
 
-                <p className="text-gray-600 mb-4 leading-relaxed">
+                <p className="text-gray-600 mb-3 leading-relaxed text-sm">
                   {project.description}
                 </p>
 
-                <div className="mb-4">
+                <div className="mb-3">
                   <div className="flex flex-wrap gap-2">
                     {project.technologies.slice(0, 4).map((tech) => (
                       <span
@@ -86,16 +86,16 @@ export default function ProjectsSection() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  {project.highlights.slice(0, 3).map((highlight, index) => (
-                    <div key={index} className="flex items-center text-sm text-gray-600">
+                <div className="space-y-1">
+                  {project.highlights.slice(0, 2).map((highlight, index) => (
+                    <div key={index} className="flex items-center text-xs text-gray-600">
                       <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
                       {highlight}
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100 flex space-x-3">
+                <div className="mt-3 pt-3 border-t border-gray-100 flex space-x-3">
                   {(project.links as any).live && (
                     <span className="text-blue-600 text-sm font-medium">Live Demo</span>
                   )}
