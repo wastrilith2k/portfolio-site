@@ -1,16 +1,32 @@
+import { useState, useEffect } from 'react'
 import { usePortfolioAnalytics, useSectionTracking } from '../../hooks/useAnalytics'
+import { portfolioService, Project } from '../../services/portfolioService'
 import { projectsData } from '../../data/portfolio-data'
 
 export default function ProjectsSection() {
   const { trackProjectView } = usePortfolioAnalytics()
   const trackSection = useSectionTracking('projects')
+  const [projects, setProjects] = useState<Project[]>(projectsData)
 
-  const handleProjectClick = (project: typeof projectsData[0]) => {
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const data = await portfolioService.getProjects()
+        setProjects(data)
+      } catch (error) {
+        console.error('Error loading projects:', error)
+      }
+    }
+    loadProjects()
+  }, [])
+
+  const handleProjectClick = (project: Project) => {
     trackProjectView(project.id, project.title)
-    if (project.links.live) {
-      window.open(project.links.live, '_blank', 'noopener,noreferrer')
-    } else if (project.links.repository) {
-      window.open(project.links.repository, '_blank', 'noopener,noreferrer')
+    const links = project.links as any
+    if (links.live) {
+      window.open(links.live, '_blank', 'noopener,noreferrer')
+    } else if (links.repository) {
+      window.open(links.repository, '_blank', 'noopener,noreferrer')
     }
   }
 
@@ -34,7 +50,7 @@ export default function ProjectsSection() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projectsData.map((project) => (
+          {projects.map((project) => (
             <div
               key={project.id}
               className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow cursor-pointer"
@@ -80,7 +96,7 @@ export default function ProjectsSection() {
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-100 flex space-x-3">
-                  {project.links.live && (
+                  {(project.links as any).live && (
                     <span className="text-blue-600 text-sm font-medium">Live Demo</span>
                   )}
                   {project.links.repository && (

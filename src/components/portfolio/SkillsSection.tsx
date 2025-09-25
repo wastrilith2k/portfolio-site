@@ -1,19 +1,34 @@
+import { useState, useEffect } from 'react'
 import { usePortfolioAnalytics, useSectionTracking } from '../../hooks/useAnalytics'
+import { portfolioService, Skill } from '../../services/portfolioService'
 import { profileData } from '../../data/portfolio-data'
 
 export default function SkillsSection() {
   const { trackSkillView } = usePortfolioAnalytics()
   const trackSection = useSectionTracking('skills')
+  const [skills, setSkills] = useState<Skill[]>(profileData.skills)
 
-  const handleSkillClick = (skill: typeof profileData.skills[0]) => {
+  useEffect(() => {
+    const loadSkills = async () => {
+      try {
+        const data = await portfolioService.getSkills()
+        setSkills(data)
+      } catch (error) {
+        console.error('Error loading skills:', error)
+      }
+    }
+    loadSkills()
+  }, [])
+
+  const handleSkillClick = (skill: Skill) => {
     trackSkillView(skill.name, skill.category)
   }
 
-  const skillsByCategory = profileData.skills.reduce((acc, skill) => {
+  const skillsByCategory = skills.reduce((acc, skill) => {
     if (!acc[skill.category]) acc[skill.category] = []
     acc[skill.category].push(skill)
     return acc
-  }, {} as Record<string, typeof profileData.skills>)
+  }, {} as Record<string, Skill[]>)
 
   const getLevelColor = (level: string) => {
     switch (level.toLowerCase()) {

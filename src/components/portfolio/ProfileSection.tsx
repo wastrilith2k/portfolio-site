@@ -1,9 +1,24 @@
+import { useState, useEffect } from 'react'
 import { usePortfolioAnalytics, useSectionTracking } from '../../hooks/useAnalytics'
+import { portfolioService, ProfileData } from '../../services/portfolioService'
 import { profileData } from '../../data/portfolio-data'
 
 export default function ProfileSection() {
   const { trackSocialClick } = usePortfolioAnalytics()
   const trackSection = useSectionTracking('profile')
+  const [profile, setProfile] = useState<ProfileData>(profileData)
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const data = await portfolioService.getProfile()
+        setProfile(data)
+      } catch (error) {
+        console.error('Error loading profile:', error)
+      }
+    }
+    loadProfile()
+  }, [])
 
   const handleSocialClick = (platform: string, url: string) => {
     trackSocialClick(platform.toLowerCase(), url)
@@ -15,12 +30,12 @@ export default function ProfileSection() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="mb-6">
           <div className="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">
-            {profileData.name.split(' ').map(n => n[0]).join('')}
+            {profile.name.split(' ').map(n => n[0]).join('')}
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">{profileData.name}</h1>
-          <h2 className="text-lg md:text-xl text-green-100 mb-4">{profileData.title}</h2>
+          <h1 className="text-3xl md:text-4xl font-bold mb-3">{profile.name}</h1>
+          <h2 className="text-lg md:text-xl text-green-100 mb-4">{profile.title}</h2>
           <p className="text-base text-green-50 max-w-2xl mx-auto leading-relaxed">
-            {profileData.summary}
+            {profile.summary}
           </p>
         </div>
 
@@ -35,7 +50,7 @@ export default function ProfileSection() {
             </button>
           ))}
           <a
-            href={profileData.resumeUrl}
+            href={profile.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white/20 hover:bg-white/30 transition-colors px-6 py-3 rounded-lg font-medium"
@@ -43,7 +58,7 @@ export default function ProfileSection() {
             Resume
           </a>
           <a
-            href={`mailto:${profileData.email}`}
+            href={`mailto:${profile.email}`}
             className="bg-white text-green-600 hover:bg-green-50 transition-colors px-6 py-3 rounded-lg font-medium"
           >
             Contact Me
