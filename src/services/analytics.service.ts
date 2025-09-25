@@ -1,12 +1,21 @@
 // Google Analytics service
+type GtagCommand = 'config' | 'event' | 'js';
+type GtagConfig = Record<string, unknown>;
+type GtagEvent = Record<string, unknown>;
+
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
-    dataLayer: any[];
+    gtag: (
+      command: GtagCommand,
+      targetId?: string | Date,
+      config?: GtagConfig | GtagEvent
+    ) => void;
+    dataLayer: Array<unknown>;
   }
 }
 
-const GA_MEASUREMENT_ID = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID?.replace(/"/g, '') || '';
+const GA_MEASUREMENT_ID =
+  import.meta.env.VITE_FIREBASE_MEASUREMENT_ID?.replace(/"/g, '') || '';
 
 /**
  * Initialize Google Analytics
@@ -24,8 +33,12 @@ export const initGoogleAnalytics = () => {
 
   // Initialize dataLayer and gtag
   window.dataLayer = window.dataLayer || [];
-  window.gtag = function gtag(...args: any[]) {
-    window.dataLayer.push(args);
+  window.gtag = function gtag(
+    command: GtagCommand,
+    targetId?: string | Date,
+    config?: GtagConfig | GtagEvent
+  ) {
+    window.dataLayer.push([command, targetId, config]);
   };
 
   // Configure Google Analytics
@@ -60,7 +73,7 @@ export const trackEvent = (
     event_category?: string;
     event_label?: string;
     value?: number;
-    custom_parameters?: Record<string, any>;
+    custom_parameters?: Record<string, string | number | boolean>;
   }
 ) => {
   if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || !window.gtag) {

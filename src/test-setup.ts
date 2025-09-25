@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 
 // Mock Firebase
 jest.mock('./config/firebase', () => ({
@@ -6,20 +6,20 @@ jest.mock('./config/firebase', () => ({
   functions: {},
   __esModule: true,
   default: {},
-}))
+}));
 
 // Mock environment variables for tests
-process.env.VITE_FIREBASE_API_KEY = 'test-api-key'
-process.env.VITE_FIREBASE_AUTH_DOMAIN = 'test.firebaseapp.com'
-process.env.VITE_FIREBASE_PROJECT_ID = 'test-project'
-process.env.VITE_GEMINI_API_KEY = 'test-gemini-key'
+process.env.VITE_FIREBASE_API_KEY = 'test-api-key';
+process.env.VITE_FIREBASE_AUTH_DOMAIN = 'test.firebaseapp.com';
+process.env.VITE_FIREBASE_PROJECT_ID = 'test-project';
+process.env.VITE_GEMINI_API_KEY = 'test-gemini-key';
 
 // Mock IntersectionObserver
 global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
-}))
+}));
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -34,4 +34,4 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-})
+});

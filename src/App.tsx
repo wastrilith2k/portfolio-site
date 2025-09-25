@@ -1,18 +1,20 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { usePageTracking } from './hooks/useAnalytics'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
-import ProfileSection from './components/portfolio/ProfileSection'
-import ProjectsSection from './components/portfolio/ProjectsSection'
-import SkillsSection from './components/portfolio/SkillsSection'
-import FloatingChatbot from './components/chat/FloatingChatbot'
-import AdminLogin from './components/admin/AdminLogin'
-import AdminDashboard from './components/admin/AdminDashboard'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { usePageTracking } from './hooks/useAnalytics';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import ProfileSection from './components/portfolio/ProfileSection';
+import ProjectsSection from './components/portfolio/ProjectsSection';
+import SkillsSection from './components/portfolio/SkillsSection';
+import FloatingChatbot from './components/chat/FloatingChatbot';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminDashboard from './components/admin/AdminDashboard';
+import HeaderSection from './components/portfolio/HeaderSection';
 
 function PortfolioPage() {
-  usePageTracking()
+  usePageTracking();
 
   return (
     <div className="min-h-screen">
+      <HeaderSection />
       <ProfileSection />
       <ProjectsSection />
       <SkillsSection />
@@ -29,14 +31,14 @@ function PortfolioPage() {
         </a>
       </div>
     </div>
-  )
+  );
 }
 
 function AdminRoute() {
-  const { user, isAdmin } = useAuth()
+  const { user, isAdmin } = useAuth();
 
   if (!user) {
-    return <AdminLogin />
+    return <AdminLogin />;
   }
 
   if (!isAdmin) {
@@ -44,14 +46,18 @@ function AdminRoute() {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg text-center">
           <h2 className="text-xl font-bold text-red-600 mb-4">Access Denied</h2>
-          <p className="text-gray-600 mb-4">You don't have permission to access this area.</p>
-          <a href="/" className="text-green-600 hover:text-green-700">Return to Portfolio</a>
+          <p className="text-gray-600 mb-4">
+            You don&#39;t have permission to access this area.
+          </p>
+          <a href="/" className="text-green-600 hover:text-green-700">
+            Return to Portfolio
+          </a>
         </div>
       </div>
-    )
+    );
   }
 
-  return <AdminDashboard />
+  return <AdminDashboard />;
 }
 
 function AppContent() {
@@ -60,7 +66,7 @@ function AppContent() {
       <Route path="/" element={<PortfolioPage />} />
       <Route path="/admin" element={<AdminRoute />} />
     </Routes>
-  )
+  );
 }
 
 function App() {
@@ -70,7 +76,7 @@ function App() {
         <AppContent />
       </AuthProvider>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
