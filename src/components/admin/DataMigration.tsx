@@ -53,6 +53,11 @@ export default function DataMigration() {
         console.log(`✅ Skill "${skill.name}" migrated successfully`)
       }
 
+      // Initialize default chatbot context
+      console.log('🤖 Initializing chatbot context...')
+      await portfolioService.updateChatbotContext('')
+      console.log('✅ Chatbot context initialized successfully')
+
       setMigrated(true)
       console.log('🎉 Data migration completed successfully!')
 

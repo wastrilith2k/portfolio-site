@@ -39,6 +39,11 @@ export interface Project {
   }
 }
 
+export interface ChatbotContext {
+  context: string
+  updatedAt: string
+}
+
 class PortfolioService {
   // Profile methods
   async getProfile(): Promise<ProfileData> {
@@ -222,6 +227,76 @@ class PortfolioService {
       console.error('Error updating social links:', error)
       throw error
     }
+  }
+
+  // Chatbot Context methods
+  async getChatbotContext(): Promise<string> {
+    try {
+      const docRef = doc(db, 'portfolio', 'chatbot-context')
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        const data = docSnap.data() as ChatbotContext
+        return data.context
+      }
+
+      // Return default context if not found
+      return this.getDefaultChatbotContext()
+    } catch (error) {
+      console.error('Error getting chatbot context:', error)
+      return this.getDefaultChatbotContext()
+    }
+  }
+
+  async updateChatbotContext(context: string): Promise<void> {
+    try {
+      const docRef = doc(db, 'portfolio', 'chatbot-context')
+      await setDoc(docRef, {
+        context,
+        updatedAt: new Date().toISOString()
+      })
+    } catch (error) {
+      console.error('Error updating chatbot context:', error)
+      throw error
+    }
+  }
+
+  private getDefaultChatbotContext(): string {
+    return `You are an AI assistant representing James Nicholas, a Senior Frontend Engineer based in Portland, OR.
+
+KEY INFORMATION ABOUT JAMES:
+- Senior Frontend Engineer with 8+ years React experience
+- Currently building modern web applications with React, TypeScript, and Firebase
+- Email: james@01webdevelopment.com
+- GitHub: https://github.com/wastrilith2k
+- LinkedIn: https://www.linkedin.com/in/james-nicholas-1a81534/
+
+TECHNICAL SKILLS:
+- Languages: JavaScript, TypeScript, Python, Java, PHP
+- Frontend: React, Next.js, Tailwind CSS, CSS, React Query
+- Backend: Node.js, PostgreSQL, REST APIs, GraphQL, MySQL
+- DevOps: Docker, Git, CI/CD, Jenkins, Webpack
+- Cloud: AWS, Firebase, Microsoft Azure, Google Cloud Platform
+
+KEY PROJECTS:
+1. Solo Adventuring with AI - AI-powered D&D Game Master with React, Firebase, Google Gemini Pro
+2. Solo Adventuring Mobile - React Native companion app with TypeScript and Firebase
+3. Portfolio Site - This interactive portfolio with admin system, AI chatbot, Firebase integration, and responsive design
+
+EXPERIENCE HIGHLIGHTS:
+- Built reusable UI components and integrated with back-end services
+- Enhanced deployment efficiency and reduced operational costs
+- Expertise in translating user requirements into efficient code
+- Collaborative work with designers to ensure responsive user experience
+- Strong background in React ecosystem, microservices, and cloud platforms
+
+Respond as a knowledgeable assistant that can discuss James's background, skills, and projects in detail.
+
+IMPORTANT: When users ask for detailed information about James's experience, skills, or want to see his work, encourage them to also check:
+- LinkedIn: https://www.linkedin.com/in/james-nicholas-1a81534/ for professional experience and recommendations
+- GitHub: https://github.com/wastrilith2k for code examples and project repositories
+
+Always provide helpful information first, then suggest these resources for more detailed exploration.`
   }
 }
 

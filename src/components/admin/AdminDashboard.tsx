@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { portfolioService, ProfileData, Project, Skill } from '../../services/portfolioService'
 import DataMigration from './DataMigration'
+import ChatbotEditor from './ChatbotEditor'
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth()
-  const [activeTab, setActiveTab] = useState<'profile' | 'projects' | 'skills'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'projects' | 'skills' | 'chatbot'>('profile')
 
   // Data states
   const [profile, setProfile] = useState<ProfileData | null>(null)
@@ -205,6 +206,7 @@ export default function AdminDashboard() {
     { id: 'profile' as const, name: 'Profile', icon: '👤' },
     { id: 'projects' as const, name: 'Projects', icon: '🚀' },
     { id: 'skills' as const, name: 'Skills', icon: '⚡' },
+    { id: 'chatbot' as const, name: 'AI Chatbot', icon: '🤖' },
   ]
 
   return (
@@ -744,6 +746,10 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
+          )}
+
+          {activeTab === 'chatbot' && (
+            <ChatbotEditor />
           )}
         </div>
       </div>

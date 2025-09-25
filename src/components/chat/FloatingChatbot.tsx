@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePortfolioAnalytics } from '../../hooks/useAnalytics'
+import { portfolioService } from '../../services/portfolioService'
 
 interface Message {
   id: string
@@ -12,6 +13,7 @@ export default function FloatingChatbot () {
   const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  const [portfolioContext, setPortfolioContext] = useState('')
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -22,6 +24,19 @@ export default function FloatingChatbot () {
   ])
 
   const { trackChatMessage } = usePortfolioAnalytics()
+
+  // Load chatbot context on mount
+  useEffect(() => {
+    const loadContext = async () => {
+      try {
+        const context = await portfolioService.getChatbotContext()
+        setPortfolioContext(context)
+      } catch (error) {
+        console.error('Error loading chatbot context:', error)
+      }
+    }
+    loadContext()
+  }, [])
 
   const handleSendMessage = async () => {
     if (!message.trim()) return
@@ -38,38 +53,11 @@ export default function FloatingChatbot () {
     setMessage('')
     setIsTyping(true)
 
-    // Portfolio context for the AI
-    const portfolioContext = `
-You are an AI assistant representing James Nicholas, a Senior Frontend Engineer based in Portland, OR.
-
-KEY INFORMATION ABOUT JAMES:
-- Senior Frontend Engineer with 6+ years React experience
-- Currently building modern web applications with React, TypeScript, and Firebase
-- Email: james@01webdevelopment.com
-- GitHub: https://github.com/wastrilith2k
-- LinkedIn: https://www.linkedin.com/in/james-nicholas-1a81534/
-
-TECHNICAL SKILLS:
-- Languages: JavaScript, TypeScript, Python, Java, PHP
-- Frontend: React, Next.js, Tailwind CSS, CSS, React Query
-- Backend: Node.js, PostgreSQL, REST APIs, GraphQL, MySQL
-- DevOps: Docker, Git, CI/CD, Jenkins, Webpack
-- Cloud: AWS, Firebase, Microsoft Azure, Google Cloud Platform
-
-KEY PROJECTS:
-1. Solo Adventuring with AI - AI-powered D&D Game Master with React, Firebase, Google Gemini Pro
-2. Solo Adventuring Mobile - React Native companion app with TypeScript and Firebase
-3. Conway's Game of Life - Interactive cellular automaton with React and modern JavaScript
-
-EXPERIENCE HIGHLIGHTS:
-- Built reusable UI components and integrated with back-end services
-- Enhanced deployment efficiency and reduced operational costs
-- Expertise in translating user requirements into efficient code
-- Collaborative work with designers to ensure responsive user experience
-- Strong background in React ecosystem, microservices, and cloud platforms
-
-Respond as a knowledgeable assistant that can discuss James's background, skills, and projects in detail.
-    `
+    // Skip if no context loaded yet
+    if (!portfolioContext) {
+      setIsTyping(false)
+      return
+    }
 
     // Call Gemini AI API directly
     try {
@@ -115,7 +103,7 @@ Respond as a knowledgeable assistant that can discuss James's background, skills
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
@@ -123,7 +111,7 @@ Respond as a knowledgeable assistant that can discuss James's background, skills
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed top-4 right-4 z-50">
       {/* Chat Toggle Button */}
       {!isOpen && (
         <button
@@ -166,8 +154,8 @@ Respond as a knowledgeable assistant that can discuss James's background, skills
               >
                 <div
                   className={`max-w-xs px-3 py-2 rounded-lg text-sm ${msg.role === 'user'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-800'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-100 text-gray-800'
                     }`}
                 >
                   <p className="leading-relaxed">{msg.content}</p>
@@ -198,7 +186,7 @@ Respond as a knowledgeable assistant that can discuss James's background, skills
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 placeholder="Ask about James..."
                 className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-500"
                 disabled={isTyping}
