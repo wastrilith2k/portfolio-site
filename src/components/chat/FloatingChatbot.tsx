@@ -8,7 +8,7 @@ interface Message {
   timestamp: string
 }
 
-export default function FloatingChatbot() {
+export default function FloatingChatbot () {
   const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -38,16 +38,52 @@ export default function FloatingChatbot() {
     setMessage('')
     setIsTyping(true)
 
-    // Call Gemini AI API via Netlify Function
+    // Portfolio context for the AI
+    const portfolioContext = `
+You are an AI assistant representing James Nicholas, a Senior Frontend Engineer based in Portland, OR.
+
+KEY INFORMATION ABOUT JAMES:
+- Senior Frontend Engineer with 6+ years React experience
+- Currently building modern web applications with React, TypeScript, and Firebase
+- Email: james@01webdevelopment.com
+- GitHub: https://github.com/wastrilith2k
+- LinkedIn: https://www.linkedin.com/in/james-nicholas-1a81534/
+
+TECHNICAL SKILLS:
+- Languages: JavaScript, TypeScript, Python, Java, PHP
+- Frontend: React, Next.js, Tailwind CSS, CSS, React Query
+- Backend: Node.js, PostgreSQL, REST APIs, GraphQL, MySQL
+- DevOps: Docker, Git, CI/CD, Jenkins, Webpack
+- Cloud: AWS, Firebase, Microsoft Azure, Google Cloud Platform
+
+KEY PROJECTS:
+1. Solo Adventuring with AI - AI-powered D&D Game Master with React, Firebase, Google Gemini Pro
+2. Solo Adventuring Mobile - React Native companion app with TypeScript and Firebase
+3. Conway's Game of Life - Interactive cellular automaton with React and modern JavaScript
+
+EXPERIENCE HIGHLIGHTS:
+- Built reusable UI components and integrated with back-end services
+- Enhanced deployment efficiency and reduced operational costs
+- Expertise in translating user requirements into efficient code
+- Collaborative work with designers to ensure responsive user experience
+- Strong background in React ecosystem, microservices, and cloud platforms
+
+Respond as a knowledgeable assistant that can discuss James's background, skills, and projects in detail.
+    `
+
+    // Call Gemini AI API directly
     try {
-      const response = await fetch('/.netlify/functions/chat', {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage.content,
-          conversationHistory: messages
+          contents: [{
+            parts: [{
+              text: `${portfolioContext}\n\nUser question: ${userMessage.content}\n\nPlease provide a helpful, informative response about James Nicholas based on the context above.`
+            }]
+          }]
         }),
       })
 
@@ -59,7 +95,7 @@ export default function FloatingChatbot() {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response,
+        content: data.candidates[0]?.content?.parts[0]?.text || "I'm sorry, I couldn't generate a response right now.",
         timestamp: new Date().toISOString()
       }
 
@@ -129,11 +165,10 @@ export default function FloatingChatbot() {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-                    msg.role === 'user'
+                  className={`max-w-xs px-3 py-2 rounded-lg text-sm ${msg.role === 'user'
                       ? 'bg-green-600 text-white'
                       : 'bg-gray-100 text-gray-800'
-                  }`}
+                    }`}
                 >
                   <p className="leading-relaxed">{msg.content}</p>
                   <span className="text-xs opacity-70 mt-1 block">
@@ -148,8 +183,8 @@ export default function FloatingChatbot() {
                 <div className="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>

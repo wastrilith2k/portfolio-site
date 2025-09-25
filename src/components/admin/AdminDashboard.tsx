@@ -485,6 +485,33 @@ export default function AdminDashboard() {
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
                           </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Technologies (comma-separated)</label>
+                            <input
+                              type="text"
+                              value={projectForm.technologies?.join(', ') || project.technologies.join(', ')}
+                              onChange={(e) => setProjectForm({ ...projectForm, technologies: e.target.value.split(', ').filter(Boolean) })}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Repository URL</label>
+                            <input
+                              type="url"
+                              value={projectForm.links?.repository || project.links.repository || ''}
+                              onChange={(e) => setProjectForm({ ...projectForm, links: { ...projectForm.links, repository: e.target.value } })}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Highlights (one per line)</label>
+                            <textarea
+                              value={projectForm.highlights?.join('\n') || project.highlights.join('\n')}
+                              onChange={(e) => setProjectForm({ ...projectForm, highlights: e.target.value.split('\n').filter(Boolean) })}
+                              rows={3}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                          </div>
                         </div>
                         <div className="space-x-2">
                           <button
