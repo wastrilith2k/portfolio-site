@@ -27,8 +27,15 @@ export const usePortfolioAnalytics = () => {
     }, []),
 
     trackChatMessage: useCallback(
-      (messageType: 'user_message' | 'bot_response') => {
-        portfolioAnalytics.trackChatMessage(messageType);
+      (messageType: 'user_message' | 'bot_response', messageContent?: string) => {
+        portfolioAnalytics.trackChatMessage(messageType, messageContent);
+      },
+      []
+    ),
+
+    trackChatbotToggle: useCallback(
+      (action: 'open' | 'close') => {
+        portfolioAnalytics.trackChatbotToggle(action);
       },
       []
     ),

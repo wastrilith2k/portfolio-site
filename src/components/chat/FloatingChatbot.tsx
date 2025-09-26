@@ -24,7 +24,7 @@ export default function FloatingChatbot() {
     },
   ]);
 
-  const { trackChatMessage } = usePortfolioAnalytics();
+  const { trackChatMessage, trackChatbotToggle } = usePortfolioAnalytics();
 
   // Load chatbot context on mount
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function FloatingChatbot() {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    trackChatMessage('user_message');
+    trackChatMessage('user_message', userMessage.content);
     setMessage('');
     setIsTyping(true);
 
@@ -98,7 +98,7 @@ export default function FloatingChatbot() {
       };
 
       setMessages(prev => [...prev, botResponse]);
-      trackChatMessage('bot_response');
+      trackChatMessage('bot_response', botResponse.content);
       setIsTyping(false);
     } catch (error) {
       console.error('AI response error:', error);
@@ -143,7 +143,10 @@ export default function FloatingChatbot() {
             />
             {/* Chat Toggle Button */}
             <button
-              onClick={() => setIsOpen(true)}
+              onClick={() => {
+                setIsOpen(true);
+                trackChatbotToggle('open');
+              }}
               className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
               aria-label="Open AI Assistant"
             >
@@ -177,7 +180,10 @@ export default function FloatingChatbot() {
               </p>
             </div>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                trackChatbotToggle('close');
+              }}
               className="text-white hover:bg-green-700 rounded p-1"
               aria-label="Close chat"
             >

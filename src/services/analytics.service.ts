@@ -104,10 +104,22 @@ export const portfolioAnalytics = {
   },
 
   // Track chatbot interactions
-  trackChatMessage: (messageType: 'user_message' | 'bot_response') => {
+  trackChatMessage: (messageType: 'user_message' | 'bot_response', messageContent?: string) => {
     trackEvent('chat_interaction', {
       event_category: 'chatbot',
       event_label: messageType,
+      custom_parameters: messageContent ? {
+        message_content: messageContent.substring(0, 500), // Limit content length for analytics
+        message_length: messageContent.length,
+      } : undefined,
+    });
+  },
+
+  // Track chatbot opening/closing
+  trackChatbotToggle: (action: 'open' | 'close') => {
+    trackEvent('chatbot_toggle', {
+      event_category: 'chatbot',
+      event_label: action,
     });
   },
 

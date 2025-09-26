@@ -7,7 +7,7 @@ import { portfolioService, ProfileData } from '../../services/portfolioService';
 import { profileData } from '../../data/portfolio-data';
 
 export default function HeaderSection() {
-  const { trackSocialClick } = usePortfolioAnalytics();
+  const { trackSocialClick, trackResumeDownload } = usePortfolioAnalytics();
   const trackSection = useSectionTracking('profile');
   const [profile, setProfile] = useState<ProfileData>(profileData);
 
@@ -121,6 +121,7 @@ export default function HeaderSection() {
             href={profile.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackResumeDownload()}
             className="bg-white/20 hover:bg-white/30 transition-colors p-3 rounded-lg"
             title="View Resume"
             aria-label="View Resume"
@@ -154,6 +155,7 @@ export default function HeaderSection() {
             href={profile.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackResumeDownload()}
             className="bg-white/20 hover:bg-white/30 transition-colors p-2 rounded"
             title="View Resume"
             aria-label="View Resume"
